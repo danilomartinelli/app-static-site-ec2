@@ -1,0 +1,43 @@
+name: Deploy Infra
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - uses: hashicorp/setup-terraform@v2
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+        working-directory: ./terraform
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./terraform
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -destroy -no-color
+        continue-on-error: true
+        working-directory: ./terraform
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -destroy -auto-approve
+        working-directory: ./terraform
+
