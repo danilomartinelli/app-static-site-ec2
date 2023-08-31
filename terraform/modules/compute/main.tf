@@ -1,7 +1,7 @@
 # EC2 INSTANCE
 
 data "template_file" "user_data" {
-  template = file("./scripts/user_data.sh")
+  template = file("${path.module}/scripts/user_data.sh")
 }
 
 resource "aws_instance" "instance" {
