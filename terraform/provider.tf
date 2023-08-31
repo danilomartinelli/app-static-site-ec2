@@ -1,6 +1,5 @@
 # PROVIDER
 terraform {
-
   required_version = "~> 1.4"
 
   required_providers {
@@ -9,12 +8,8 @@ terraform {
       version = "~> 4.55"
     }
   }
-
 }
 
 provider "aws" {
-  region                   = "us-east-1"
-  shared_config_files      = ["./.aws/config"]
-  shared_credentials_files = ["./.aws/credentials"]
-  profile                  = "fiap"
+  region = "us-east-1"
 }
